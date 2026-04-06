@@ -25,19 +25,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Reel spinning animation */
-@keyframes reel-spin {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+/* Reel animations */
+@keyframes shimmer-scroll {
+  from { background-position: 0 0; }
+  to   { background-position: 0 8px; }
 }
 
-@keyframes reel-blur {
-  0%, 100% { filter: blur(0px); }
-  50% { filter: blur(2px); }
-}
-
-.reel-spinning .reel-items {
-  animation: reel-blur 0.15s ease-in-out infinite;
+@keyframes settle-flash {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* Slot machine evolution styles */
