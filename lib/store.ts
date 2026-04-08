@@ -1,9 +1,8 @@
-import type { StudyContent, StudyDuration, StudyLog } from './types'
+import type { StudyContent, StudyDuration } from './types'
 
 const KEYS = {
   contents: 'slot_study_contents',
   durations: 'slot_study_durations',
-  logs: 'slot_study_logs',
 }
 
 const DEFAULT_CONTENTS: StudyContent[] = [
@@ -62,28 +61,4 @@ export function getDurations(): StudyDuration[] {
 
 export function saveDurations(durations: StudyDuration[]): void {
   set(KEYS.durations, durations)
-}
-
-export function getLogs(): StudyLog[] {
-  return get<StudyLog[]>(KEYS.logs, [])
-}
-
-export function addLog(log: StudyLog): void {
-  const logs = getLogs()
-  set(KEYS.logs, [log, ...logs])
-}
-
-export function updateLogStatus(id: string, status: boolean): void {
-  const logs = getLogs()
-  set(
-    KEYS.logs,
-    logs.map((l) => (l.id === id ? { ...l, status } : l))
-  )
-}
-
-export function getAchievementRate(): number {
-  const logs = getLogs()
-  if (logs.length === 0) return 0
-  const achieved = logs.filter((l) => l.status).length
-  return Math.round((achieved / logs.length) * 100)
 }

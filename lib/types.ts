@@ -8,12 +8,10 @@ export interface StudyDuration {
   minutes: number
 }
 
-export interface StudyLog {
+export interface StudyLogRow {
   id: string
-  date: string
-  contentId: string
-  contentName: string
-  durationId: string
-  durationMinutes: number
+  created_at: string
+  content: string
+  duration: number
   status: boolean
 }
