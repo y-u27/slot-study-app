@@ -1,19 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getLogs, updateLogStatus } from '@/lib/store'
-import type { StudyLog } from '@/lib/types'
+import { fetchLogs, updateLogStatus } from '@/lib/supabaseStore'
+import type { StudyLogRow } from '@/lib/types'
 
 export default function LogsPage() {
-  const [logs, setLogs] = useState<StudyLog[]>([])
+  const [logs, setLogs] = useState<StudyLogRow[]>([])
 
   useEffect(() => {
-    setLogs(getLogs())
+    fetchLogs().then(setLogs)
   }, [])
 
-  const toggleStatus = (id: string, current: boolean) => {
+  const toggleStatus = async (id: string, current: boolean) => {
     const next = !current
-    updateLogStatus(id, next)
+    await updateLogStatus(id, next)
     setLogs((prev) =>
       prev.map((l) => (l.id === id ? { ...l, status: next } : l))
     )
@@ -37,8 +37,10 @@ export default function LogsPage() {
               className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-800 truncate">{log.contentName}</p>
-                <p className="text-sm text-gray-500">{log.durationMinutes}分 &nbsp;·&nbsp; {log.date}</p>
+                <p className="font-semibold text-gray-800 truncate">{log.content}</p>
+                <p className="text-sm text-gray-500">
+                  {log.duration}分 &nbsp;·&nbsp; {log.created_at.split('T')[0]}
+                </p>
               </div>
               <button
                 onClick={() => toggleStatus(log.id, log.status)}

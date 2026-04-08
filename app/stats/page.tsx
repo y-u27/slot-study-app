@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getLogs } from '@/lib/store'
-import type { StudyLog } from '@/lib/types'
+import { fetchLogs } from '@/lib/supabaseStore'
+import type { StudyLogRow } from '@/lib/types'
 
 interface DayStat {
   date: string
@@ -10,11 +10,12 @@ interface DayStat {
   achieved: number
 }
 
-function buildDayStats(logs: StudyLog[]): DayStat[] {
+function buildDayStats(logs: StudyLogRow[]): DayStat[] {
   const map = new Map<string, DayStat>()
   for (const log of logs) {
-    const existing = map.get(log.date) ?? { date: log.date, total: 0, achieved: 0 }
-    map.set(log.date, {
+    const date = log.created_at.split('T')[0]
+    const existing = map.get(date) ?? { date, total: 0, achieved: 0 }
+    map.set(date, {
       ...existing,
       total: existing.total + 1,
       achieved: existing.achieved + (log.status ? 1 : 0),
@@ -24,10 +25,10 @@ function buildDayStats(logs: StudyLog[]): DayStat[] {
 }
 
 export default function StatsPage() {
-  const [logs, setLogs] = useState<StudyLog[]>([])
+  const [logs, setLogs] = useState<StudyLogRow[]>([])
 
   useEffect(() => {
-    setLogs(getLogs())
+    fetchLogs().then(setLogs)
   }, [])
 
   const dayStats = buildDayStats(logs)

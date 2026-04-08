@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import { useSlotMachine } from "@/hooks/useSlotMachine";
-import { Cabinet } from "@/components/slot/Cabinet";
-import { ReelArea } from "@/components/slot/ReelArea";
-import { Controls } from "@/components/slot/Controls";
-import { ResultPanel } from "@/components/slot/ResultPanel";
+import { useSlotMachine } from '@/hooks/useSlotMachine'
+import { Cabinet }     from '@/components/slot/Cabinet'
+import { ReelArea }    from '@/components/slot/ReelArea'
+import { Controls }    from '@/components/slot/Controls'
+import { ResultPanel } from '@/components/slot/ResultPanel'
 
 export default function SlotMachine() {
   const {
@@ -26,14 +26,14 @@ export default function SlotMachine() {
     handleStop2,
     handleRecord,
     handleRetry,
-  } = useSlotMachine();
+  } = useSlotMachine()
 
   if (!hasItems) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-500 text-sm">
         設定から学習内容・時間を追加してください
       </div>
-    );
+    )
   }
 
   return (
@@ -42,6 +42,7 @@ export default function SlotMachine() {
         evo={evo}
         achievementRate={achievementRate}
         isSpinning={isSpinning}
+        state={state}
         reels={
           <ReelArea
             contentNames={contentNames}
@@ -51,16 +52,15 @@ export default function SlotMachine() {
             reel2Stopped={reel2Stopped}
             result1Name={result1?.name ?? null}
             result2Label={result2 ? `${result2.minutes}分` : null}
+            state={state}
+            onStop1={handleStop1}
+            onStop2={handleStop2}
           />
         }
         controls={
           <Controls
             state={state}
-            reel1Stopped={reel1Stopped}
-            reel2Stopped={reel2Stopped}
             onStart={handleStart}
-            onStop1={handleStop1}
-            onStop2={handleStop2}
           />
         }
       />
@@ -76,5 +76,5 @@ export default function SlotMachine() {
         />
       )}
     </div>
-  );
+  )
 }
