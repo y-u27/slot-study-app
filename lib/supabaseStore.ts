@@ -1,13 +1,17 @@
 import { supabase } from './supabase'
 import type { StudyLogRow } from './types'
 
+function logError(label: string, error: { message?: string; code?: string; details?: string; hint?: string }) {
+  console.error(`${label} [${error.code ?? '?'}] ${error.message ?? '(no message)'}`, error.details ?? '', error.hint ?? '')
+}
+
 export async function fetchLogs(): Promise<StudyLogRow[]> {
   const { data, error } = await supabase
     .from('study_logs')
     .select('*')
     .order('created_at', { ascending: false })
   if (error) {
-    console.error('fetchLogs error:', error)
+    logError('fetchLogs error:', error)
     return []
   }
   return data ?? []
@@ -19,7 +23,7 @@ export async function insertLog(log: {
   status: boolean
 }): Promise<{ error: unknown }> {
   const { error } = await supabase.from('study_logs').insert(log)
-  if (error) console.error('insertLog error:', error)
+  if (error) logError('insertLog error:', error)
   return { error }
 }
 
@@ -28,7 +32,7 @@ export async function updateLogStatus(id: string, status: boolean): Promise<void
     .from('study_logs')
     .update({ status })
     .eq('id', id)
-  if (error) console.error('updateLogStatus error:', error)
+  if (error) logError('updateLogStatus error:', error)
 }
 
 export async function fetchAchievementRate(): Promise<number> {
