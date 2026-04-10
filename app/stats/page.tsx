@@ -13,7 +13,7 @@ interface DayStat {
 function buildDayStats(logs: StudyLogRow[]): DayStat[] {
   const map = new Map<string, DayStat>()
   for (const log of logs) {
-    const date = log.created_at.split('T')[0]
+    const date = log.created_at ? log.created_at.split('T')[0] : 'unknown'
     const existing = map.get(date) ?? { date, total: 0, achieved: 0 }
     map.set(date, {
       ...existing,
