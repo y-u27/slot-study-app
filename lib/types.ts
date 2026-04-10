@@ -10,7 +10,7 @@ export interface StudyDuration {
 
 export interface StudyLogRow {
   id: string
-  created_at: string
+  created_at: string | null
   content: string
   duration: number
   status: boolean
