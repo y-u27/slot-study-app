@@ -39,7 +39,7 @@ export default function LogsPage() {
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-800 truncate">{log.content}</p>
                 <p className="text-sm text-gray-500">
-                  {log.duration}分 &nbsp;·&nbsp; {log.created_at.split('T')[0]}
+                  {log.duration}分 &nbsp;·&nbsp; {log.created_at ? log.created_at.split('T')[0] : ''}
                 </p>
               </div>
               <button
