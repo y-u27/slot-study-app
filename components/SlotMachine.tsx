@@ -6,7 +6,12 @@ import { ReelArea }    from '@/components/slot/ReelArea'
 import { Controls }    from '@/components/slot/Controls'
 import { ResultPanel } from '@/components/slot/ResultPanel'
 
-export default function SlotMachine() {
+interface SlotMachineProps {
+  achievementRate: number
+  onRecorded: () => Promise<void>
+}
+
+export default function SlotMachine({ achievementRate, onRecorded }: SlotMachineProps) {
   const {
     contentNames,
     durationLabels,
@@ -17,7 +22,6 @@ export default function SlotMachine() {
     result2,
     showResult,
     saved,
-    achievementRate,
     isSpinning,
     evo,
     hasItems,
@@ -26,18 +30,18 @@ export default function SlotMachine() {
     handleStop2,
     handleRecord,
     handleRetry,
-  } = useSlotMachine()
+  } = useSlotMachine(achievementRate, onRecorded)
 
   if (!hasItems) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-500 text-sm">
+      <div className="flex items-center justify-center h-40 text-gray-400 text-sm bg-white rounded-2xl border border-gray-200 shadow-sm">
         設定から学習内容・時間を追加してください
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col items-center gap-5 py-6 px-4">
+    <div className="flex flex-col items-center gap-5">
       <Cabinet
         evo={evo}
         achievementRate={achievementRate}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getContents, getDurations } from "@/lib/store";
-import { insertLog, fetchAchievementRate } from "@/lib/supabaseStore";
+import { insertLog } from "@/lib/supabaseStore";
 import type { StudyContent, StudyDuration } from "@/lib/types";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -23,7 +23,6 @@ export interface UseSlotMachineReturn {
   result2: StudyDuration | null;
   showResult: boolean;
   saved: boolean;
-  achievementRate: number;
   isSpinning: boolean;
   evo: Evo;
   hasItems: boolean;
@@ -56,7 +55,10 @@ export function getEvo(rate: number): Evo {
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
 
-export function useSlotMachine(): UseSlotMachineReturn {
+export function useSlotMachine(
+  achievementRate: number,
+  onRecorded: () => Promise<void>
+): UseSlotMachineReturn {
   const [contents, setContents] = useState<StudyContent[]>([]);
   const [durations, setDurations] = useState<StudyDuration[]>([]);
   const [state, setState] = useState<SlotState>("idle");
@@ -66,12 +68,10 @@ export function useSlotMachine(): UseSlotMachineReturn {
   const [result2, setResult2] = useState<StudyDuration | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [achievementRate, setAchievementRate] = useState(0);
 
   useEffect(() => {
     setContents(getContents());
     setDurations(getDurations());
-    fetchAchievementRate().then(setAchievementRate);
   }, []);
 
   const pickRandom = useCallback(
@@ -120,9 +120,9 @@ export function useSlotMachine(): UseSlotMachineReturn {
     }).then(({ error }) => {
       if (error) return;
       setSaved(true);
-      fetchAchievementRate().then(setAchievementRate);
+      onRecorded();
     });
-  }, [result1, result2]);
+  }, [result1, result2, onRecorded]);
 
   const handleRetry = useCallback(() => {
     setReel1Stopped(false);
@@ -150,7 +150,6 @@ export function useSlotMachine(): UseSlotMachineReturn {
     result2,
     showResult,
     saved,
-    achievementRate,
     isSpinning: state === "spinning",
     evo: getEvo(achievementRate),
     hasItems: contents.length > 0 && durations.length > 0,
