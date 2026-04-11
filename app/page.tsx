@@ -1,51 +1,57 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { fetchLogs, updateLogStatus } from "@/lib/supabaseStore";
-import type { StudyLogRow } from "@/lib/types";
+import { fetchAchievementRate } from "@/lib/supabaseStore";
 import SlotMachine from "@/components/SlotMachine";
-import { StatsSection } from "@/components/dashboard/StatsSection";
-import { LogsSection } from "@/components/dashboard/LogsSection";
-import { SettingsSection } from "@/components/dashboard/SettingsSection";
+import { getEvo } from "@/hooks/useSlotMachine";
 
-export default function DashboardPage() {
-  const [logs, setLogs] = useState<StudyLogRow[]>([]);
+export default function PlayPage() {
+  const [achievementRate, setAchievementRate] = useState(0);
 
-  const refreshLogs = useCallback(async () => {
-    const data = await fetchLogs();
-    setLogs(data);
+  const refreshRate = useCallback(async () => {
+    const rate = await fetchAchievementRate();
+    setAchievementRate(rate);
   }, []);
 
   useEffect(() => {
-    refreshLogs();
-  }, [refreshLogs]);
+    refreshRate();
+  }, [refreshRate]);
 
-  const achievementRate =
-    logs.length === 0
-      ? 0
-      : Math.round((logs.filter((l) => l.status).length / logs.length) * 100);
+  const evo = getEvo(achievementRate);
 
-  const toggleStatus = async (id: string, current: boolean) => {
-    const next = !current;
-    await updateLogStatus(id, next);
-    setLogs((prev) =>
-      prev.map((l) => (l.id === id ? { ...l, status: next } : l)),
-    );
-  };
+  const barColor =
+    achievementRate >= 80
+      ? "linear-gradient(90deg, #fbbf24, #f59e0b)"
+      : achievementRate >= 60
+        ? "linear-gradient(90deg, #60a5fa, #3b82f6)"
+        : achievementRate >= 30
+          ? "linear-gradient(90deg, #86efac, #22c55e)"
+          : "linear-gradient(90deg, #d1d5db, #9ca3af)";
 
   return (
-    <div className="flex flex-col gap-5 py-6 px-4 pb-8">
-      {/* ① スロット */}
-      <SlotMachine achievementRate={achievementRate} onRecorded={refreshLogs} />
+    <div className="flex flex-col items-center gap-5 py-6 px-4">
+      <SlotMachine achievementRate={achievementRate} onRecorded={refreshRate} />
 
-      {/* ② ステータス */}
-      <StatsSection logs={logs} achievementRate={achievementRate} />
-
-      {/* ③ ログ一覧 */}
-      <LogsSection logs={logs} onToggleStatus={toggleStatus} />
-
-      {/* ④ 設定（折りたたみ） */}
-      <SettingsSection />
+      {/* 簡易ステータス */}
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-gray-200 shadow-sm px-4 py-3 flex items-center gap-4">
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-gray-500">達成率</span>
+            <span
+              className="text-xs font-bold"
+              style={{ color: evo.accent }}
+            >
+              {evo.label} · {achievementRate}%
+            </span>
+          </div>
+          <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div
+              className="h-2 rounded-full transition-all duration-700"
+              style={{ width: `${achievementRate}%`, background: barColor }}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ interface LogsSectionProps {
 }
 
 export function LogsSection({ logs, onToggleStatus }: LogsSectionProps) {
-  const recent = logs.slice(0, 10)
+  const recent = logs
 
   return (
     <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex flex-col gap-3">
