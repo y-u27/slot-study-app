@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getContents, getDurations } from "@/lib/store";
 import { insertLog } from "@/lib/supabaseStore";
 import type { StudyContent, StudyDuration } from "@/lib/types";
@@ -68,10 +68,18 @@ export function useSlotMachine(
   const [result2, setResult2] = useState<StudyDuration | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [saved, setSaved] = useState(false);
+  const autoResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setContents(getContents());
     setDurations(getDurations());
+  }, []);
+
+  // アンマウント時にタイマーをクリア
+  useEffect(() => {
+    return () => {
+      if (autoResetTimerRef.current) clearTimeout(autoResetTimerRef.current);
+    };
   }, []);
 
   const pickRandom = useCallback(
@@ -121,6 +129,18 @@ export function useSlotMachine(
       if (error) return;
       setSaved(true);
       onRecorded();
+
+      // 1.8秒後に自動リセット（アニメーション終了と同期）
+      autoResetTimerRef.current = setTimeout(() => {
+        setState("idle");
+        setReel1Stopped(false);
+        setReel2Stopped(false);
+        setResult1(null);
+        setResult2(null);
+        setShowResult(false);
+        setSaved(false);
+        autoResetTimerRef.current = null;
+      }, 1800);
     });
   }, [result1, result2, onRecorded]);
 

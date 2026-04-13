@@ -1,83 +1,83 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import {
   getContents,
   getDurations,
   saveContents,
   saveDurations,
-} from '@/lib/store'
-import type { StudyContent, StudyDuration } from '@/lib/types'
+} from "@/lib/store";
+import type { StudyContent, StudyDuration } from "@/lib/types";
 
 export function SettingsSection() {
-  const [open, setOpen] = useState(false)
-  const [contents, setContents] = useState<StudyContent[]>([])
-  const [durations, setDurations] = useState<StudyDuration[]>([])
-  const [newContent, setNewContent] = useState('')
-  const [newMinutes, setNewMinutes] = useState('')
-  const [editContentId, setEditContentId] = useState<string | null>(null)
-  const [editContentName, setEditContentName] = useState('')
-  const [editDurationId, setEditDurationId] = useState<string | null>(null)
-  const [editDurationMinutes, setEditDurationMinutes] = useState('')
+  const [open, setOpen] = useState(false);
+  const [contents, setContents] = useState<StudyContent[]>([]);
+  const [durations, setDurations] = useState<StudyDuration[]>([]);
+  const [newContent, setNewContent] = useState("");
+  const [newMinutes, setNewMinutes] = useState("");
+  const [editContentId, setEditContentId] = useState<string | null>(null);
+  const [editContentName, setEditContentName] = useState("");
+  const [editDurationId, setEditDurationId] = useState<string | null>(null);
+  const [editDurationMinutes, setEditDurationMinutes] = useState("");
 
   useEffect(() => {
-    setContents(getContents())
-    setDurations(getDurations())
-  }, [])
+    setContents(getContents());
+    setDurations(getDurations());
+  }, []);
 
   const addContent = () => {
-    const name = newContent.trim()
-    if (!name) return
-    const updated = [...contents, { id: crypto.randomUUID(), name }]
-    setContents(updated)
-    saveContents(updated)
-    setNewContent('')
-  }
+    const name = newContent.trim();
+    if (!name) return;
+    const updated = [...contents, { id: crypto.randomUUID(), name }];
+    setContents(updated);
+    saveContents(updated);
+    setNewContent("");
+  };
 
   const deleteContent = (id: string) => {
-    const updated = contents.filter((c) => c.id !== id)
-    setContents(updated)
-    saveContents(updated)
-  }
+    const updated = contents.filter((c) => c.id !== id);
+    setContents(updated);
+    saveContents(updated);
+  };
 
   const saveEditContent = () => {
-    const name = editContentName.trim()
-    if (!name || !editContentId) return
+    const name = editContentName.trim();
+    if (!name || !editContentId) return;
     const updated = contents.map((c) =>
-      c.id === editContentId ? { ...c, name } : c
-    )
-    setContents(updated)
-    saveContents(updated)
-    setEditContentId(null)
-    setEditContentName('')
-  }
+      c.id === editContentId ? { ...c, name } : c,
+    );
+    setContents(updated);
+    saveContents(updated);
+    setEditContentId(null);
+    setEditContentName("");
+  };
 
   const addDuration = () => {
-    const mins = parseInt(newMinutes, 10)
-    if (!mins || mins <= 0) return
-    const updated = [...durations, { id: crypto.randomUUID(), minutes: mins }]
-    setDurations(updated)
-    saveDurations(updated)
-    setNewMinutes('')
-  }
+    const mins = parseInt(newMinutes, 10);
+    if (!mins || mins <= 0) return;
+    const updated = [...durations, { id: crypto.randomUUID(), minutes: mins }];
+    setDurations(updated);
+    saveDurations(updated);
+    setNewMinutes("");
+  };
 
   const deleteDuration = (id: string) => {
-    const updated = durations.filter((d) => d.id !== id)
-    setDurations(updated)
-    saveDurations(updated)
-  }
+    const updated = durations.filter((d) => d.id !== id);
+    setDurations(updated);
+    saveDurations(updated);
+  };
 
   const saveEditDuration = () => {
-    const mins = parseInt(editDurationMinutes, 10)
-    if (!mins || mins <= 0 || !editDurationId) return
+    const mins = parseInt(editDurationMinutes, 10);
+    if (!mins || mins <= 0 || !editDurationId) return;
     const updated = durations.map((d) =>
-      d.id === editDurationId ? { ...d, minutes: mins } : d
-    )
-    setDurations(updated)
-    saveDurations(updated)
-    setEditDurationId(null)
-    setEditDurationMinutes('')
-  }
+      d.id === editDurationId ? { ...d, minutes: mins } : d,
+    );
+    setDurations(updated);
+    saveDurations(updated);
+    setEditDurationId(null);
+    setEditDurationMinutes("");
+  };
 
   return (
     <section className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
@@ -87,37 +87,68 @@ export function SettingsSection() {
         className="w-full flex items-center justify-between px-4 py-3.5 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
       >
         <span>⚙️ 設定</span>
-        <span className="text-gray-400 text-xs">{open ? '▲ 閉じる' : '▼ 開く'}</span>
+        <span className="text-gray-400 text-xs">
+          {open ? "▲ 閉じる" : "▼ 開く"}
+        </span>
       </button>
 
       {open && (
         <div className="px-4 pb-5 flex flex-col gap-6 border-t border-gray-100">
           {/* Study Content */}
           <div className="pt-4">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">学習内容</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              学習内容
+            </h3>
             <ul className="flex flex-col gap-2 mb-3">
               {contents.map((c) => (
-                <li key={c.id} className="flex items-center gap-2 bg-gray-50 rounded-lg border border-gray-100 px-3 py-2">
+                <li
+                  key={c.id}
+                  className="flex items-center gap-2 bg-gray-50 rounded-lg border border-gray-100 px-3 py-2"
+                >
                   {editContentId === c.id ? (
                     <>
                       <input
                         className="flex-1 text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={editContentName}
                         onChange={(e) => setEditContentName(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && saveEditContent()}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && saveEditContent()
+                        }
                         autoFocus
                       />
-                      <button onClick={saveEditContent} className="text-xs text-blue-600 font-medium px-2">保存</button>
-                      <button onClick={() => setEditContentId(null)} className="text-xs text-gray-400 px-1">✕</button>
+                      <button
+                        onClick={saveEditContent}
+                        className="text-xs text-blue-600 font-medium px-2"
+                      >
+                        保存
+                      </button>
+                      <button
+                        onClick={() => setEditContentId(null)}
+                        className="text-xs text-gray-400 px-1"
+                      >
+                        ✕
+                      </button>
                     </>
                   ) : (
                     <>
-                      <span className="flex-1 text-sm text-gray-700">{c.name}</span>
+                      <span className="flex-1 text-sm text-gray-700">
+                        {c.name}
+                      </span>
                       <button
-                        onClick={() => { setEditContentId(c.id); setEditContentName(c.name) }}
+                        onClick={() => {
+                          setEditContentId(c.id);
+                          setEditContentName(c.name);
+                        }}
                         className="text-xs text-gray-400 hover:text-blue-500 px-1"
-                      >編集</button>
-                      <button onClick={() => deleteContent(c.id)} className="text-xs text-gray-400 hover:text-red-500 px-1">削除</button>
+                      >
+                        編集
+                      </button>
+                      <button
+                        onClick={() => deleteContent(c.id)}
+                        className="text-xs text-gray-400 hover:text-red-500 px-1"
+                      >
+                        削除
+                      </button>
                     </>
                   )}
                 </li>
@@ -129,21 +160,28 @@ export function SettingsSection() {
                 placeholder="例：数学"
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addContent()}
+                onKeyDown={(e) => e.key === "Enter" && addContent()}
               />
               <button
                 onClick={addContent}
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
-              >追加</button>
+              >
+                追加
+              </button>
             </div>
           </div>
 
           {/* Study Duration */}
           <div>
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">学習時間</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              学習時間
+            </h3>
             <ul className="flex flex-col gap-2 mb-3">
               {durations.map((d) => (
-                <li key={d.id} className="flex items-center gap-2 bg-gray-50 rounded-lg border border-gray-100 px-3 py-2">
+                <li
+                  key={d.id}
+                  className="flex items-center gap-2 bg-gray-50 rounded-lg border border-gray-100 px-3 py-2"
+                >
                   {editDurationId === d.id ? (
                     <>
                       <input
@@ -151,22 +189,46 @@ export function SettingsSection() {
                         className="flex-1 text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={editDurationMinutes}
                         onChange={(e) => setEditDurationMinutes(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && saveEditDuration()}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && saveEditDuration()
+                        }
                         min={1}
                         autoFocus
                       />
                       <span className="text-sm text-gray-500">分</span>
-                      <button onClick={saveEditDuration} className="text-xs text-blue-600 font-medium px-2">保存</button>
-                      <button onClick={() => setEditDurationId(null)} className="text-xs text-gray-400 px-1">✕</button>
+                      <button
+                        onClick={saveEditDuration}
+                        className="text-xs text-blue-600 font-medium px-2"
+                      >
+                        保存
+                      </button>
+                      <button
+                        onClick={() => setEditDurationId(null)}
+                        className="text-xs text-gray-400 px-1"
+                      >
+                        ✕
+                      </button>
                     </>
                   ) : (
                     <>
-                      <span className="flex-1 text-sm text-gray-700">{d.minutes}分</span>
+                      <span className="flex-1 text-sm text-gray-700">
+                        {d.minutes}分
+                      </span>
                       <button
-                        onClick={() => { setEditDurationId(d.id); setEditDurationMinutes(String(d.minutes)) }}
+                        onClick={() => {
+                          setEditDurationId(d.id);
+                          setEditDurationMinutes(String(d.minutes));
+                        }}
                         className="text-xs text-gray-400 hover:text-blue-500 px-1"
-                      >編集</button>
-                      <button onClick={() => deleteDuration(d.id)} className="text-xs text-gray-400 hover:text-red-500 px-1">削除</button>
+                      >
+                        編集
+                      </button>
+                      <button
+                        onClick={() => deleteDuration(d.id)}
+                        className="text-xs text-gray-400 hover:text-red-500 px-1"
+                      >
+                        削除
+                      </button>
                     </>
                   )}
                 </li>
@@ -179,18 +241,22 @@ export function SettingsSection() {
                 placeholder="例：30"
                 value={newMinutes}
                 onChange={(e) => setNewMinutes(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addDuration()}
+                onKeyDown={(e) => e.key === "Enter" && addDuration()}
                 min={1}
               />
-              <span className="flex items-center text-sm text-gray-500">分</span>
+              <span className="flex items-center text-sm text-gray-500">
+                分
+              </span>
               <button
                 onClick={addDuration}
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
-              >追加</button>
+              >
+                追加
+              </button>
             </div>
           </div>
         </div>
       )}
     </section>
-  )
+  );
 }

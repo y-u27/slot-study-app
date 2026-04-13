@@ -37,10 +37,7 @@ export default function PlayPage() {
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs text-gray-500">達成率</span>
-            <span
-              className="text-xs font-bold"
-              style={{ color: evo.accent }}
-            >
+            <span className="text-xs font-bold" style={{ color: evo.accent }}>
               {evo.label} · {achievementRate}%
             </span>
           </div>

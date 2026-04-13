@@ -61,6 +61,18 @@ body {
   }
 }
 
+/* ─── Record success fade-out ───────────────────────────────────── */
+
+@keyframes record-success-fadeout {
+  0%   { opacity: 1; transform: translateY(0); }
+  65%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(6px); }
+}
+
+.record-success {
+  animation: record-success-fadeout 1.8s ease-in-out forwards;
+}
+
 /* ─── Result reveal ─────────────────────────────────────────────── */
 
 @keyframes result-pop {

@@ -1,61 +1,73 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { fetchLogs, updateLogStatus } from '@/lib/supabaseStore'
 import type { StudyLogRow } from '@/lib/types'
+import { LogCalendar } from '@/components/logs/LogCalendar'
+import { DayLogList }  from '@/components/logs/DayLogList'
+
+// StatsSection(204px) + gap-5(20px) + ChartSection(214px) = 438px
+const CARD_H = 438
 
 export default function LogsPage() {
-  const [logs, setLogs] = useState<StudyLogRow[]>([])
+  const [logs,     setLogs]     = useState<StudyLogRow[]>([])
+  const [selected, setSelected] = useState<string | null>(null)
 
-  useEffect(() => {
-    fetchLogs().then(setLogs)
+  const refreshLogs = useCallback(async () => {
+    const data = await fetchLogs()
+    setLogs(data)
   }, [])
 
+  useEffect(() => {
+    const today = new Date()
+    const yyyy  = today.getFullYear()
+    const mm    = String(today.getMonth() + 1).padStart(2, '0')
+    const dd    = String(today.getDate()).padStart(2, '0')
+    setSelected(`${yyyy}-${mm}-${dd}`)
+    refreshLogs()
+  }, [refreshLogs])
+
   const toggleStatus = async (id: string, current: boolean) => {
-    const next = !current
-    await updateLogStatus(id, next)
-    setLogs((prev) =>
-      prev.map((l) => (l.id === id ? { ...l, status: next } : l))
-    )
+    await updateLogStatus(id, !current)
+    await refreshLogs()
+  }
+
+  const handleSelect = (date: string) => {
+    setSelected(date || null)
   }
 
   return (
-    <div className="px-4 py-6 flex flex-col gap-4">
-      <h1 className="text-xl font-bold text-gray-800">学習ログ</h1>
+    // ダッシュボードと同じ余白・同じ幅コンテナ
+    <div className="px-4 py-6">
+      <h1 className="text-lg font-bold text-gray-800 mb-5">ログ</h1>
 
-      {logs.length === 0 ? (
-        <div className="text-center text-gray-400 py-16">
-          <p className="text-4xl mb-3">📋</p>
-          <p>まだ記録がありません</p>
-          <p className="text-sm mt-1">スロットで学習内容を決めて記録しましょう</p>
+      {/* カード：幅はダッシュボードセクションと同一、高さ = Stats + gap + Chart */}
+      <div
+        className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+        style={{ height: CARD_H }}
+      >
+        <div className="flex h-full">
+
+          {/* ── 左：カレンダー（38%） ── */}
+          <div className="w-[38%] border-r border-gray-200 overflow-hidden">
+            <LogCalendar
+              logs={logs}
+              selected={selected}
+              onSelect={handleSelect}
+            />
+          </div>
+
+          {/* ── 右：ログ一覧（62%） ── */}
+          <div className="flex-1 bg-gray-50 overflow-hidden">
+            <DayLogList
+              logs={logs}
+              selected={selected}
+              onToggleStatus={toggleStatus}
+            />
+          </div>
+
         </div>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {logs.map((log) => (
-            <li
-              key={log.id}
-              className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm"
-            >
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-800 truncate">{log.content}</p>
-                <p className="text-sm text-gray-500">
-                  {log.duration}分 &nbsp;·&nbsp; {log.created_at ? log.created_at.split('T')[0] : ''}
-                </p>
-              </div>
-              <button
-                onClick={() => toggleStatus(log.id, log.status)}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
-                  log.status
-                    ? 'bg-green-100 text-green-700 border-green-300 hover:bg-green-200'
-                    : 'bg-gray-100 text-gray-500 border-gray-300 hover:bg-gray-200'
-                }`}
-              >
-                {log.status ? '✅ 達成' : '未達成'}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      </div>
     </div>
   )
 }

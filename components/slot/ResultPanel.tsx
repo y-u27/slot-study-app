@@ -51,7 +51,7 @@ export function ResultPanel({
       <div className="px-6 pb-5">
         {saved ? (
           <div
-            className="text-center py-3 rounded-xl"
+            className="record-success text-center py-3 rounded-xl"
             style={{
               background: "rgba(46,204,113,0.12)",
               border: "1px solid rgba(46,204,113,0.3)",
