@@ -1,17 +1,20 @@
-'use client'
+"use client";
 
-import { useSlotMachine } from '@/hooks/useSlotMachine'
-import { Cabinet }     from '@/components/slot/Cabinet'
-import { ReelArea }    from '@/components/slot/ReelArea'
-import { Controls }    from '@/components/slot/Controls'
-import { ResultPanel } from '@/components/slot/ResultPanel'
+import { useSlotMachine } from "@/hooks/useSlotMachine";
+import { Cabinet } from "@/components/slot/Cabinet";
+import { ReelArea } from "@/components/slot/ReelArea";
+import { Controls } from "@/components/slot/Controls";
+import { ResultPanel } from "@/components/slot/ResultPanel";
 
 interface SlotMachineProps {
-  achievementRate: number
-  onRecorded: () => Promise<void>
+  achievementRate: number;
+  onRecorded: () => Promise<void>;
 }
 
-export default function SlotMachine({ achievementRate, onRecorded }: SlotMachineProps) {
+export default function SlotMachine({
+  achievementRate,
+  onRecorded,
+}: SlotMachineProps) {
   const {
     contentNames,
     durationLabels,
@@ -30,14 +33,14 @@ export default function SlotMachine({ achievementRate, onRecorded }: SlotMachine
     handleStop2,
     handleRecord,
     handleRetry,
-  } = useSlotMachine(achievementRate, onRecorded)
+  } = useSlotMachine(achievementRate, onRecorded);
 
   if (!hasItems) {
     return (
       <div className="flex items-center justify-center h-40 text-gray-400 text-sm bg-white rounded-2xl border border-gray-200 shadow-sm">
         設定から学習内容・時間を追加してください
       </div>
-    )
+    );
   }
 
   return (
@@ -61,12 +64,7 @@ export default function SlotMachine({ achievementRate, onRecorded }: SlotMachine
             onStop2={handleStop2}
           />
         }
-        controls={
-          <Controls
-            state={state}
-            onStart={handleStart}
-          />
-        }
+        controls={<Controls state={state} onStart={handleStart} />}
       />
 
       {showResult && result1 && result2 && (
@@ -80,5 +78,5 @@ export default function SlotMachine({ achievementRate, onRecorded }: SlotMachine
         />
       )}
     </div>
-  )
+  );
 }

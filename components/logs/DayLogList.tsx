@@ -1,24 +1,28 @@
-'use client'
+"use client";
 
-import type { StudyLogRow } from '@/lib/types'
+import type { StudyLogRow } from "@/lib/types";
 
 interface DayLogListProps {
-  logs: StudyLogRow[]          // all logs
-  selected: string | null      // "YYYY-MM-DD" or null = show all
-  onToggleStatus: (id: string, current: boolean) => Promise<void>
+  logs: StudyLogRow[]; // all logs
+  selected: string | null; // "YYYY-MM-DD" or null = show all
+  onToggleStatus: (id: string, current: boolean) => Promise<void>;
 }
 
-export function DayLogList({ logs, selected, onToggleStatus }: DayLogListProps) {
+export function DayLogList({
+  logs,
+  selected,
+  onToggleStatus,
+}: DayLogListProps) {
   const filtered = selected
     ? logs.filter((l) => l.created_at?.startsWith(selected))
-    : logs
+    : logs;
 
   const headerLabel = selected
-    ? `${selected.slice(5).replace('-', '/')} のログ`
-    : 'すべてのログ'
+    ? `${selected.slice(5).replace("-", "/")} のログ`
+    : "すべてのログ";
 
-  const achieved  = filtered.filter((l) => l.status).length
-  const total     = filtered.length
+  const achieved = filtered.filter((l) => l.status).length;
+  const total = filtered.length;
 
   return (
     <div className="flex flex-col h-full">
@@ -38,7 +42,7 @@ export function DayLogList({ logs, selected, onToggleStatus }: DayLogListProps) 
           <div className="flex flex-col items-center justify-center h-full text-gray-300 gap-2 py-12">
             <span className="text-3xl">📭</span>
             <p className="text-xs">
-              {selected ? 'この日の記録はありません' : 'まだ記録がありません'}
+              {selected ? "この日の記録はありません" : "まだ記録がありません"}
             </p>
           </div>
         ) : (
@@ -48,7 +52,7 @@ export function DayLogList({ logs, selected, onToggleStatus }: DayLogListProps) 
                 {/* Status dot */}
                 <span
                   className={`shrink-0 w-2 h-2 rounded-full ${
-                    log.status ? 'bg-green-400' : 'bg-gray-200'
+                    log.status ? "bg-green-400" : "bg-gray-200"
                   }`}
                 />
 
@@ -59,9 +63,7 @@ export function DayLogList({ logs, selected, onToggleStatus }: DayLogListProps) 
                   </p>
                   <p className="text-[10px] text-gray-400">
                     {log.duration}分
-                    {log.created_at && (
-                      <> · {log.created_at.split('T')[0]}</>
-                    )}
+                    {log.created_at && <> · {log.created_at.split("T")[0]}</>}
                   </p>
                 </div>
 
@@ -70,11 +72,11 @@ export function DayLogList({ logs, selected, onToggleStatus }: DayLogListProps) 
                   onClick={() => onToggleStatus(log.id, log.status)}
                   className={`shrink-0 px-2 py-1 rounded-full text-[10px] font-semibold border transition-colors ${
                     log.status
-                      ? 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100'
-                      : 'bg-gray-50 text-gray-400 border-gray-200 hover:bg-gray-100'
+                      ? "bg-green-50 text-green-600 border-green-200 hover:bg-green-100"
+                      : "bg-gray-50 text-gray-400 border-gray-200 hover:bg-gray-100"
                   }`}
                 >
-                  {log.status ? '達成' : '未達成'}
+                  {log.status ? "達成" : "未達成"}
                 </button>
               </li>
             ))}
@@ -82,5 +84,5 @@ export function DayLogList({ logs, selected, onToggleStatus }: DayLogListProps) 
         )}
       </div>
     </div>
-  )
+  );
 }

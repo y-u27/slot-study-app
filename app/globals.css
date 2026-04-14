@@ -28,45 +28,73 @@ body {
 /* ─── Reel ─────────────────────────────────────────────────────── */
 
 @keyframes shimmer-scroll {
-  from { background-position: 0 0; }
-  to   { background-position: 0 8px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 8px;
+  }
 }
 
 @keyframes settle-flash {
-  0%   { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* ─── STOP button pulse ─────────────────────────────────────────── */
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 4px 0 #641e16, 0 6px 20px rgba(231,76,60,0.4); }
-  50%       { box-shadow: 0 4px 0 #641e16, 0 6px 30px rgba(231,76,60,0.8), 0 0 20px rgba(231,76,60,0.5); }
+  0%,
+  100% {
+    box-shadow:
+      0 4px 0 #641e16,
+      0 6px 20px rgba(231, 76, 60, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 4px 0 #641e16,
+      0 6px 30px rgba(231, 76, 60, 0.8),
+      0 0 20px rgba(231, 76, 60, 0.5);
+  }
 }
 
 /* ─── Stage 4: gold border pulse ───────────────────────────────── */
 
 @keyframes gold-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow:
-      0 0 40px rgba(212,168,32,0.45),
-      0 0 80px rgba(212,168,32,0.12),
-      0 24px 60px rgba(0,0,0,0.7);
+      0 0 40px rgba(212, 168, 32, 0.45),
+      0 0 80px rgba(212, 168, 32, 0.12),
+      0 24px 60px rgba(0, 0, 0, 0.7);
   }
   50% {
     box-shadow:
-      0 0 65px rgba(212,168,32,0.75),
-      0 0 130px rgba(212,168,32,0.28),
-      0 24px 60px rgba(0,0,0,0.7);
+      0 0 65px rgba(212, 168, 32, 0.75),
+      0 0 130px rgba(212, 168, 32, 0.28),
+      0 24px 60px rgba(0, 0, 0, 0.7);
   }
 }
 
 /* ─── Record success fade-out ───────────────────────────────────── */
 
 @keyframes record-success-fadeout {
-  0%   { opacity: 1; transform: translateY(0); }
-  65%  { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(6px); }
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }
 
 .record-success {
@@ -76,9 +104,17 @@ body {
 /* ─── Result reveal ─────────────────────────────────────────────── */
 
 @keyframes result-pop {
-  0%   { transform: scale(0.8); opacity: 0; }
-  70%  { transform: scale(1.05); }
-  100% { transform: scale(1);   opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .result-revealed {

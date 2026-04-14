@@ -57,7 +57,7 @@ export function getEvo(rate: number): Evo {
 
 export function useSlotMachine(
   achievementRate: number,
-  onRecorded: () => Promise<void>
+  onRecorded: () => Promise<void>,
 ): UseSlotMachineReturn {
   const [contents, setContents] = useState<StudyContent[]>([]);
   const [durations, setDurations] = useState<StudyDuration[]>([]);
@@ -83,7 +83,7 @@ export function useSlotMachine(
   }, []);
 
   const pickRandom = useCallback(
-    <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)],
+    <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)],
     [],
   );
 

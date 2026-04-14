@@ -1,42 +1,45 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { fetchLogs } from '@/lib/supabaseStore'
-import type { StudyLogRow } from '@/lib/types'
+import { useEffect, useState } from "react";
+import { fetchLogs } from "@/lib/supabaseStore";
+import type { StudyLogRow } from "@/lib/types";
 
 interface DayStat {
-  date: string
-  total: number
-  achieved: number
+  date: string;
+  total: number;
+  achieved: number;
 }
 
 function buildDayStats(logs: StudyLogRow[]): DayStat[] {
-  const map = new Map<string, DayStat>()
+  const map = new Map<string, DayStat>();
   for (const log of logs) {
-    const date = log.created_at ? log.created_at.split('T')[0] : 'unknown'
-    const existing = map.get(date) ?? { date, total: 0, achieved: 0 }
+    const date = log.created_at ? log.created_at.split("T")[0] : "unknown";
+    const existing = map.get(date) ?? { date, total: 0, achieved: 0 };
     map.set(date, {
       ...existing,
       total: existing.total + 1,
       achieved: existing.achieved + (log.status ? 1 : 0),
-    })
+    });
   }
-  return Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date)).slice(-14)
+  return Array.from(map.values())
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(-14);
 }
 
 export default function StatsPage() {
-  const [logs, setLogs] = useState<StudyLogRow[]>([])
+  const [logs, setLogs] = useState<StudyLogRow[]>([]);
 
   useEffect(() => {
-    fetchLogs().then(setLogs)
-  }, [])
+    fetchLogs().then(setLogs);
+  }, []);
 
-  const dayStats = buildDayStats(logs)
-  const totalLogs = logs.length
-  const totalAchieved = logs.filter((l) => l.status).length
-  const achievementRate = totalLogs === 0 ? 0 : Math.round((totalAchieved / totalLogs) * 100)
+  const dayStats = buildDayStats(logs);
+  const totalLogs = logs.length;
+  const totalAchieved = logs.filter((l) => l.status).length;
+  const achievementRate =
+    totalLogs === 0 ? 0 : Math.round((totalAchieved / totalLogs) * 100);
 
-  const maxTotal = Math.max(...dayStats.map((d) => d.total), 1)
+  const maxTotal = Math.max(...dayStats.map((d) => d.total), 1);
 
   if (totalLogs === 0) {
     return (
@@ -48,7 +51,7 @@ export default function StatsPage() {
           <p className="text-sm mt-1">学習を記録すると統計が表示されます</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -79,33 +82,44 @@ export default function StatsPage() {
             className="h-4 rounded-full transition-all duration-700"
             style={{
               width: `${achievementRate}%`,
-              background: achievementRate >= 80
-                ? 'linear-gradient(90deg, #fbbf24, #f59e0b)'
-                : achievementRate >= 60
-                ? 'linear-gradient(90deg, #60a5fa, #3b82f6)'
-                : achievementRate >= 30
-                ? 'linear-gradient(90deg, #86efac, #22c55e)'
-                : 'linear-gradient(90deg, #d1d5db, #9ca3af)',
+              background:
+                achievementRate >= 80
+                  ? "linear-gradient(90deg, #fbbf24, #f59e0b)"
+                  : achievementRate >= 60
+                    ? "linear-gradient(90deg, #60a5fa, #3b82f6)"
+                    : achievementRate >= 30
+                      ? "linear-gradient(90deg, #86efac, #22c55e)"
+                      : "linear-gradient(90deg, #d1d5db, #9ca3af)",
             }}
           />
         </div>
         <p className="text-xs text-gray-400 mt-2">
-          {achievementRate >= 80 ? '👑 豪華スロット解放中！' :
-           achievementRate >= 60 ? '🎰 通常スロット' :
-           achievementRate >= 30 ? '✨ 少し改善' : '🔧 もっと頑張ろう'}
+          {achievementRate >= 80
+            ? "👑 豪華スロット解放中！"
+            : achievementRate >= 60
+              ? "🎰 通常スロット"
+              : achievementRate >= 30
+                ? "✨ 少し改善"
+                : "🔧 もっと頑張ろう"}
         </p>
       </div>
 
       {/* Daily bar chart */}
       {dayStats.length > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <p className="text-sm font-semibold text-gray-700 mb-4">日別達成数（直近14日）</p>
+          <p className="text-sm font-semibold text-gray-700 mb-4">
+            日別達成数（直近14日）
+          </p>
           <div className="flex items-end gap-1.5 h-32">
             {dayStats.map((d) => {
-              const heightPct = (d.total / maxTotal) * 100
-              const achievedPct = d.total === 0 ? 0 : (d.achieved / d.total) * 100
+              const heightPct = (d.total / maxTotal) * 100;
+              const achievedPct =
+                d.total === 0 ? 0 : (d.achieved / d.total) * 100;
               return (
-                <div key={d.date} className="flex-1 flex flex-col items-center gap-1">
+                <div
+                  key={d.date}
+                  className="flex-1 flex flex-col items-center gap-1"
+                >
                   <div
                     className="w-full rounded-t-sm bg-gray-100 relative overflow-hidden"
                     style={{ height: `${Math.max(heightPct, 8)}%` }}
@@ -120,15 +134,21 @@ export default function StatsPage() {
                     {d.date.slice(5)}
                   </span>
                 </div>
-              )
+              );
             })}
           </div>
           <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
-            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-400 inline-block" />達成</span>
-            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-gray-200 inline-block" />未達成</span>
+            <span className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-sm bg-green-400 inline-block" />
+              達成
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-sm bg-gray-200 inline-block" />
+              未達成
+            </span>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

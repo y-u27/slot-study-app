@@ -1,32 +1,38 @@
-'use client'
+"use client";
 
-import type { StudyLogRow } from '@/lib/types'
+import type { StudyLogRow } from "@/lib/types";
 
 interface StatsSectionProps {
-  logs: StudyLogRow[]
-  achievementRate: number
+  logs: StudyLogRow[];
+  achievementRate: number;
 }
 
 export function StatsSection({ logs, achievementRate }: StatsSectionProps) {
-  const totalAchieved = logs.filter((l) => l.status).length
+  const totalAchieved = logs.filter((l) => l.status).length;
 
   const barColor =
     achievementRate >= 80
-      ? 'linear-gradient(90deg, #fbbf24, #f59e0b)'
+      ? "linear-gradient(90deg, #fbbf24, #f59e0b)"
       : achievementRate >= 60
-      ? 'linear-gradient(90deg, #60a5fa, #3b82f6)'
-      : achievementRate >= 30
-      ? 'linear-gradient(90deg, #86efac, #22c55e)'
-      : 'linear-gradient(90deg, #d1d5db, #9ca3af)'
+        ? "linear-gradient(90deg, #60a5fa, #3b82f6)"
+        : achievementRate >= 30
+          ? "linear-gradient(90deg, #86efac, #22c55e)"
+          : "linear-gradient(90deg, #d1d5db, #9ca3af)";
 
   const stageLabel =
-    achievementRate >= 80 ? '👑 豪華スロット解放中！' :
-    achievementRate >= 60 ? '🎰 通常スロット' :
-    achievementRate >= 30 ? '✨ 少し改善' : '🔧 もっと頑張ろう'
+    achievementRate >= 80
+      ? "👑 豪華スロット解放中！"
+      : achievementRate >= 60
+        ? "🎰 通常スロット"
+        : achievementRate >= 30
+          ? "✨ 少し改善"
+          : "🔧 もっと頑張ろう";
 
   return (
     <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex flex-col gap-4">
-      <h2 className="text-sm font-bold text-gray-700 tracking-wide">📊 ステータス</h2>
+      <h2 className="text-sm font-bold text-gray-700 tracking-wide">
+        📊 ステータス
+      </h2>
 
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-3">
@@ -55,5 +61,5 @@ export function StatsSection({ logs, achievementRate }: StatsSectionProps) {
         <p className="text-xs text-gray-400 mt-1.5">{stageLabel}</p>
       </div>
     </section>
-  )
+  );
 }
