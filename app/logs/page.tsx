@@ -5,6 +5,8 @@ import { fetchLogs, updateLogStatus } from "@/lib/supabaseStore";
 import type { StudyLogRow } from "@/lib/types";
 import { LogCalendar } from "@/components/logs/LogCalendar";
 import { DayLogList } from "@/components/logs/DayLogList";
+import { useAuth } from "@/lib/auth";
+import { LoginModal } from "@/components/LoginModal";
 
 // StatsSection(204px) + gap-5(20px) + ChartSection(214px) = 438px
 const CARD_H = 438;
@@ -17,6 +19,8 @@ function isEditable(createdAt: string | null): boolean {
 }
 
 export default function LogsPage() {
+  const { user, loading } = useAuth();
+  const [showLogin, setShowLogin] = useState(false);
   const [logs, setLogs] = useState<StudyLogRow[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -44,6 +48,33 @@ export default function LogsPage() {
   const handleSelect = (date: string) => {
     setSelected(date || null);
   };
+
+  if (!loading && !user) {
+    return (
+      <>
+        <div className="px-4 py-6 flex flex-col items-center gap-6 pt-20">
+          <p className="text-4xl">📋</p>
+          <div className="text-center">
+            <p className="font-bold text-gray-800 mb-1">ログを確認するにはログインが必要です</p>
+            <p className="text-sm text-gray-400">学習記録を保存・振り返りできます</p>
+          </div>
+          <button
+            onClick={() => setShowLogin(true)}
+            className="px-8 py-3 rounded-xl font-bold text-sm text-white"
+            style={{
+              background: "linear-gradient(180deg, #3b82f6 0%, #2563eb 100%)",
+              boxShadow: "0 3px 0 #1d4ed8",
+            }}
+          >
+            ログイン
+          </button>
+        </div>
+        {showLogin && (
+          <LoginModal onClose={() => setShowLogin(false)} onSuccess={() => setShowLogin(false)} />
+        )}
+      </>
+    );
+  }
 
   return (
     <div className="px-4 py-6 flex flex-col gap-3">
