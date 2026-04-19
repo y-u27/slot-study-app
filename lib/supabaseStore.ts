@@ -29,7 +29,11 @@ export async function insertLog(log: {
   duration: number;
   status: boolean;
 }): Promise<{ error: unknown }> {
-  const { error } = await supabase.from("study_logs").insert(log);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: new Error("not authenticated") };
+  const { error } = await supabase
+    .from("study_logs")
+    .insert({ ...log, user_id: user.id });
   if (error) logError("insertLog error:", error);
   return { error };
 }
