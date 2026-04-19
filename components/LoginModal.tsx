@@ -18,7 +18,6 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
   const [error, setError] = useState<string | null>(null);
   const [signupDone, setSignupDone] = useState(false);
 
-  // モーダル表示中は背景スクロールを禁止
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -56,38 +55,30 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
   };
 
   return (
-    /* Backdrop — dvh でモバイル Safari のツールバーを除いた実際の高さを使う */
+    /* Backdrop: 全サイズで中央配置 */
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
-      style={{
-        background: "rgba(0,0,0,0.55)",
-        // iOS Safari で inset-0 が 100vh を超えるケースの保険
-        height: "100dvh",
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-5"
+      style={{ background: "rgba(0,0,0,0.6)", height: "100dvh" }}
       onClick={onClose}
     >
-      {/* Modal card — max-h で画面内に収める */}
+      {/* Modal card */}
       <div
-        className="w-full max-w-sm rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl flex flex-col"
-        style={{ maxHeight: "90dvh" }}
+        className="w-full max-w-sm rounded-2xl bg-white shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ドラッグハンドル（固定・スクロール対象外） */}
-        <div className="shrink-0 pt-3 pb-1 flex justify-center sm:hidden">
-          <div className="h-1 w-10 rounded-full bg-gray-200" />
-        </div>
-
-        {/* スクロール可能なコンテンツ領域 */}
+        {/*
+          スクロール領域に直接 maxHeight を設定する。
+          flex-1 に頼らないことで、親が height:auto でも確実にスクロールが発動する。
+        */}
         <div
-          className="overflow-y-auto flex-1 px-6 pt-4 pb-6"
+          className="overflow-y-auto overscroll-contain px-6 py-6"
           style={{
-            // iPhone ホームインジケーターにかぶらないように
+            maxHeight: "90dvh",
             paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
           }}
         >
           {signupDone ? (
-            /* ── 登録完了メッセージ ── */
-            <div className="text-center py-4 flex flex-col gap-4">
+            <div className="text-center flex flex-col gap-4">
               <p className="text-3xl">📬</p>
               <p className="font-bold text-gray-800">確認メールを送信しました</p>
               <p className="text-sm text-gray-500">
@@ -125,13 +116,13 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
 
               {/* フォーム */}
               <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                {/* text-base(16px) でiOSの自動ズームを防ぐ */}
                 <input
                   type="email"
                   placeholder="メールアドレス"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  // font-size 16px でiOSの自動ズームを防ぐ
                   className="w-full rounded-xl border border-gray-200 px-4 py-3 text-base text-gray-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                 />
                 <input
@@ -151,7 +142,6 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
                 <button
                   type="submit"
                   disabled={loading}
-                  // min-h でタップ領域を確保
                   className="mt-1 w-full min-h-[48px] rounded-xl font-bold text-sm text-white transition-all active:scale-[0.98] disabled:opacity-60"
                   style={{
                     background:
