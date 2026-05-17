@@ -12,15 +12,20 @@ interface DayStat {
 
 function buildDayStats(logs: StudyLogRow[]): DayStat[] {
   const map = new Map<string, DayStat>();
+  // 以下を繰り返し処理する
   for (const log of logs) {
+    // dateを定義し、logのcreated_atが正しい場合、インデックス0にTを分割し、違う場合は不明を表示する
     const date = log.created_at ? log.created_at.split("T")[0] : "不明";
+    // existingを定義し、mapのdateがnullの場合、dateのtotalを0、achievedを0を返す
     const existing = map.get(date) ?? { date, total: 0, achieved: 0 };
+    // mapをset関数で、dateをexistingを展開した値+totalにexistingのtotalに1を足した値+achievedにexistingのachievedにlogのstatusが1か0の場合を足した値を設定する
     map.set(date, {
       ...existing,
       total: existing.total + 1,
       achieved: existing.achieved + (log.status ? 1 : 0),
     });
   }
+  // 上記以外の場合、Arrayのfrom関数で
   return Array.from(map.values())
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(-14);
