@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "スタディスロット",
+  title: "slot-study",
   description: "悩む時間をゼロにする学習アプリ",
 };
 
