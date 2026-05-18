@@ -1,15 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { HelpModal } from "@/components/HelpModal";
-import Navigation from "./Navigation";
+
+const NAV_ITEMS = [
+  { href: "/", label: "プレイ", icon: "🎰" },
+  { href: "/logs", label: "ログ", icon: "📋" },
+  { href: "/dashboard", label: "DB", icon: "📊" },
+];
 
 export default function Header() {
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -20,26 +27,32 @@ export default function Header() {
     router.push("/");
   };
 
-  const emailLabel = user?.email
-    ? user.email.length > 20
-      ? user.email.slice(0, 18) + "…"
-      : user.email
-    : "ログイン中";
-
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100">
-        <div className="max-w-lg mx-auto h-11 px-4 flex items-center justify-between">
-          <div>
-            <Navigation />
-          </div>
-          {user ? (
-            <span className="text-xs text-gray-400 truncate max-w-[55%]">
-              {emailLabel}
-            </span>
-          ) : (
-            <span />
-          )}
+        <div className="max-w-lg mx-auto h-11 px-3 flex items-center justify-between">
+          {/* 左：ナビゲーション */}
+          <nav className="flex items-center gap-1">
+            {NAV_ITEMS.map(({ href, label, icon }) => {
+              const active = pathname === href;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                    active
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="text-sm">{icon}</span>
+                  <span>{label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* 右：ヘルプ・ログアウト */}
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setShowHelp(true)}
