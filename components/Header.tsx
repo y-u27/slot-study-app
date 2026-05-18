@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { HelpModal } from "@/components/HelpModal";
+import Navigation from "./Navigation";
 
 export default function Header() {
   const { user } = useAuth();
@@ -29,6 +30,9 @@ export default function Header() {
     <>
       <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100">
         <div className="max-w-lg mx-auto h-11 px-4 flex items-center justify-between">
+          <div>
+            <Navigation />
+          </div>
           {user ? (
             <span className="text-xs text-gray-400 truncate max-w-[55%]">
               {emailLabel}
