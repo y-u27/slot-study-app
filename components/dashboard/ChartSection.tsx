@@ -10,24 +10,30 @@ interface DayStat {
   achieved: number;
 }
 
+// 複数の学習ログ(StudyLogRow[(])を受け取り、日付ごとに集計した配列(DayStat[])を返す関数
 function buildDayStats(logs: StudyLogRow[]): DayStat[] {
+  // 日付文字列をキー、集計データを値とするからのMapを左作成
   const map = new Map<string, DayStat>();
-  // 以下を繰り返し処理する
+  // 以下ログを1件ずつ繰り返し処理する
   for (const log of logs) {
-    // dateを定義し、logのcreated_atが正しい場合、インデックス0にTを分割し、違う場合は不明を表示する
+    // dateを定義し、logのcreated_atが正しい場合、created_atは"2025-05-17T12:34:56"の形式のため、split("T")[0]で日付部分("2025-05-17")だけ取り出す
+    // 違う場合、"不明"を表示する
     const date = log.created_at ? log.created_at.split("T")[0] : "不明";
-    // existingを定義し、mapのdateがnullの場合、dateのtotalを0、achievedを0を返す
+    // existingを定義し、その日付のデータがMapにすでにあれば取得、なければ初期値(total: 0, achieved: 0)を作成する
     const existing = map.get(date) ?? { date, total: 0, achieved: 0 };
-    // mapをset関数で、dateをexistingを展開した値+totalにexistingのtotalに1を足した値+achievedにexistingのachievedにlogのstatusが1か0の場合を足した値を設定する
+    // 既存データ(existing)を展開した上で、totalに+1、達成ならachievedにも+1してMapを更新
     map.set(date, {
       ...existing,
       total: existing.total + 1,
       achieved: existing.achieved + (log.status ? 1 : 0),
     });
   }
-  // 上記以外の場合、Arrayのfrom関数で
+  // 上記以外の場合、Array.fromメソッドで以下処理をする
+  // 1.Array.fromメソッドでMapの値だけを取り出して配列に変換
   return Array.from(map.values())
+    // 日付文字列を辞書順(日付の正受)に並び替え
     .sort((a, b) => a.date.localeCompare(b.date))
+    // 配列の末尾14件だけを取り出す(最新14日分)
     .slice(-14);
 }
 
