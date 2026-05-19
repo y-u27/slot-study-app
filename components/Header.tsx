@@ -10,7 +10,7 @@ import { HelpModal } from "@/components/HelpModal";
 const NAV_ITEMS = [
   { href: "/", label: "プレイ", icon: "🎰" },
   { href: "/logs", label: "ログ", icon: "📋" },
-  { href: "/dashboard", label: "DB", icon: "📊" },
+  { href: "/dashboard", label: "記録", icon: "📊" },
 ];
 
 export default function Header() {
@@ -32,7 +32,7 @@ export default function Header() {
       <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100">
         <div className="max-w-lg mx-auto h-11 px-3 flex items-center justify-between">
           {/* 左：ナビゲーション */}
-          <nav className="flex items-center gap-1">
+          <nav className="flex items-center gap-4">
             {NAV_ITEMS.map(({ href, label, icon }) => {
               const active = pathname === href;
               return (
