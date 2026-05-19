@@ -50,10 +50,6 @@ export default function Header() {
                 </Link>
               );
             })}
-          </nav>
-
-          {/* 右：ヘルプ・ログアウト */}
-          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setShowHelp(true)}
               className="w-7 h-7 rounded-full border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600 text-sm font-bold flex items-center justify-center"
@@ -61,6 +57,10 @@ export default function Header() {
             >
               ?
             </button>
+          </nav>
+
+          {/* 右：ヘルプ・ログアウト */}
+          <div className="flex items-center gap-2 shrink-0">
             {user && (
               <button
                 onClick={handleLogout}
