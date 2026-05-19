@@ -139,7 +139,7 @@ export function Cabinet({
             transition: "color 0.8s",
           }}
         >
-          Study Slot
+          Slot Study
         </h1>
         <p
           className="text-[10px] tracking-widest mt-1"
