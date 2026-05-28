@@ -8,9 +8,9 @@ import { supabase } from "@/lib/supabase";
 import { HelpModal } from "@/components/HelpModal";
 
 const NAV_ITEMS = [
-  { href: "/", label: "プレイ", icon: "🎰" },
-  { href: "/logs", label: "ログ", icon: "📋" },
-  { href: "/dashboard", label: "記録", icon: "📊" },
+  { href: "/", label: "Play", icon: "🎰" },
+  { href: "/logs", label: "Logs", icon: "📋" },
+  { href: "/dashboard", label: "Record", icon: "📊" },
 ];
 
 export default function Header() {
