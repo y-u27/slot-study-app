@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100">
-        <div className="max-w-lg mx-auto h-11 px-20 flex items-center justify-between">
+        <div className="max-w-lg mx-auto h-11 px-25 flex items-center justify-between">
           {/* 左：ナビゲーション */}
           <nav className="flex items-center gap-4">
             {NAV_ITEMS.map(({ href, label, icon }) => {
